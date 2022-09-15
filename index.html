@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="notranslate" translate="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>シス単 Helper</title>
+    <script src="js/system_entango.js" type="module"></script>
+    <link rel="stylesheet" href="css/system_eitango.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="english-mode_XXX">
+    <div class="container">
+
+        <h1>
+            <span class="english">SysTan Quiz Helper</span>
+            <span class="japanese">SysTan クイズ・ヘルパー</span>
+        </h1>
+        <h3>
+            <span class="english">Build a SysTan quiz. Or just copy the words.</span>
+            <span class="japanese">クイズを作るか、そのまま単語をクリップボードにコピーできます。</span>
+            <br>
+            <span class="english">Whatever turns you on.</span>
+            <span class="japanese">ご自由にどうぞ。</span>
+        </h3>
+
+        <table id="controls-holder">
+            <tr>
+                <td class="line-number"></td>
+                <td>
+                    <span class="instructions">
+                        <span class="english">What words?</span>
+                        <span class="japanese">単語の範囲は？</span>
+                    </span>
+                </td>
+                <td>
+                    <input id="range-from" type="number" class="range-input" min="1" value="1"> 〜
+                    <input id="range-to" type="number" class="range-input" min="1" value="10">
+                </td>
+            </tr>
+            <tr>
+                <td class="line-number"></td>
+                <td>
+                    <span class="instructions">
+                        <span class="english">What to copy?　</span>
+                        <span class="japanese">コピーする言語？ </span>
+                    </span>
+                </td>
+                <td>
+                    <select id="copy-target-select">
+                        <option value="english_japanese">English & Japanese</option>
+                        <option value="english">English Only</option>
+                        <option value="japanese">Japanese Only</option>
+                    </select>
+                    <button id="copy-items-button" class="btn btn-sm btn-primary">
+                        <span class="english">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-clipboard my-icon" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                                <path
+                                    d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                            </svg>
+                            Copy words
+                        </span>
+                        <span class="japanese">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-clipboard my-icon" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                                <path
+                                    d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                            </svg>
+                            コピーする
+                        </span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <div id="words-table-holder">
+            <table id="words-table">
+                <tr class="table-header">
+                    <th id="toggle-active-button" class="pointable">
+                        <label>
+                            <span class="english">Active</span>
+                            <span class="japanese">有効</span>
+                            <span id="num-active-holder">(9)</span>
+                            <br>
+                            <input type="checkbox" id="toggle-all-checkbox" checked>
+                        </label>
+                    </th>
+                    <th class="pointable">
+                        <span class="english">Number</span>
+                        <span class="japanese">番号</span>
+                        <br>
+                        <label>
+                            <input type="checkbox" id="toggle-shuffle-checkbox">
+                            <span style="font-weight: normal;">
+                                <span class="english">Random</span>
+                                <span class="japanese">シャッフル</span>
+                            </span>
+                        </label>
+                    </th>
+                    <th>
+                        <span class="english">English</span>
+                        <span class="japanese">英語</span>
+                    </th>
+                    <th>
+                        <span class="english">Japanese</span>
+                        <span class="japanese">日本語</span>
+                    </th>
+                </tr>
+                <tr class="items-row">
+                    <td class="active-item centered">
+                        <input type="checkbox" class="is-active-checkbox" checked>
+                    </td>
+                    <td class="item-number centered"></td>
+                    <td class="english-word word-cell"></td>
+                    <td class="japanese-word word-cell"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="quiz-stuff">
+
+            <h2>
+                <span class="english">Build a Quiz?</span>
+                <span class="japanese">クイズを作りますか？</span>
+            </h2>
+            <h3>
+                <span class="english">Copy and paste into Word or Excel</span>
+                <span class="japanese">コピーして Word や Excel に貼り付けましょう。</span>
+            </h3>
+
+
+            <table id="quiz-settings">
+                <tr>
+                    <td class="line-number"></td>
+                    <td>
+                        <span>
+                            <span class="english">Type of quiz?</span>
+                            <span class="japanese">クイズの種類は？</span>
+                        </span>
+                    </td>
+                    <td>
+                        <select id="quiz-type-select">
+                            <option value="eiwa" selected>English to Japanese</option>
+                            <option value="waei">Japanese to English</option>
+                            <option value="spelling">Spelling</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="line-number"></td>
+                    <td>
+                        <span>
+                            <span class="english">Number problems?</span>
+                            <span class="japanese">問題の数は?</span>
+                            (max <span id="max-number-problems"></span>)</span>
+                    </td>
+                    <td>
+                        <input type="number" id="num-problems-input">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="line-number"></td>
+                    <td>
+                        <span>
+                            <span class="english">Number of choices?</span>
+                            <span class="japanese">選択肢の数は？</span>
+                        </span>
+                    </td>
+                    <td>
+                        <select id="num-choices-select">
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="line-number"></td>
+                    <td>
+                        <span>
+                            <span class="english">Choices on?</span>
+                            <span class="japanese">選択肢のスペーシングは？</span>
+                        </span>
+                    </td>
+                    <td>
+                        <select id="choices-on-select">
+                            <span class="english">
+                                <option value="sameline">Same line</option>
+                            </span>
+                            <span class="japanese">
+                                <option value="newline" selected>Separate lines</option>
+                            </span>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="advanced">
+                    <td class="line-number"></td>
+                    <td>
+                        <span>
+                            <span class="english">Choice numbering?</span>
+                            <span class="japanese">選択肢の記号は？</span>
+                        </span>
+                    </td>
+                    <td>
+                        <select id="choice-number-type-select">
+                            <option value="abc">A), B), C) ...</option>
+                            <option value="numbers">1) , 2) , 3) ...</option>
+                            <option value="katakana">ア), イ), ウ) ...</option>
+                            <option value="squares">□, □, □ ...</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="advanced">
+                    <td class="line-number"></td>
+                    <td>
+                        <span class="english">Space between problems? </span>
+                        <span class="japanese">問題間のスペーシングは？ </span>
+                    </td>
+                    <td>
+                        <select id="problem-spacing-select">
+                            <option value="0">None</option>
+                            <option value="1" selected>One</option>
+                            <option value="2">Two</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="advanced">
+                    <td class="line-number"></td>
+                    <td>
+                        <span class="english">Shuffle problems? </span>
+                        <span class="japanese">問題をシャッフルする？ </span>
+                    </td>
+                    <td>
+                        <select id="shuffle-problems-select">
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="advanced">
+                    <td class="line-number"></td>
+                    <td>
+                        <span class="english">Answer space?</span>
+                        <span class="japanese">解答欄？</span>
+                    </td>
+                    <td>
+                        <select id="kaitou-ran-select">
+                            <option value="" selected>None</option>
+                            <option value="parentheses">(　　)</option>
+                            <option value="brackets">[　　]</option>
+                            <option value="line">_____</option>
+                            <option value="parentheses_with_line">( _____ )</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr style="height: 3rem;">
+                    <td colspan="3">
+                        <label id="show-advanced-label">
+                            <input type="checkbox" id="show-advanced-checkbox">
+                            <span class="english">Show advanced settings</span>
+                            <span class="japanese">高度な設定を表示する</span>
+                        </label>
+                        <label class="advanced">
+                            <input type="checkbox" id="auto-generate-quiz-checkbox">
+                            <span class="english">Auto-generate quiz</span>
+                            <span class="japanese">自動的にクイズを生産する</span>
+                        </label>
+                    </td>
+                </tr>
+
+            </table>
+
+            <div id="quiz-buttons-holder">
+                <button id="generate-quiz-button" class="btn btn-sm btn-danger">
+                    <span class="english">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-counterclockwise my-icon" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+                            <path
+                                d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+                        </svg>
+                        Generate new quiz
+                    </span>
+                    <span class="japanese">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-counterclockwise my-icon" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+                            <path
+                                d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+                        </svg>
+                        新しいクイズを生産する
+                    </span>
+                </button>
+                <button id="copy-quiz-button" class="btn btn-sm btn-primary">
+                    <span class="english">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-clipboard my-icon" viewBox="0 0 16 16">
+                            <path
+                                d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                            <path
+                                d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                        </svg>
+                        Copy to clipboard
+                    </span>
+                    <span class="japanese">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-clipboard my-icon" viewBox="0 0 16 16">
+                            <path
+                                d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                            <path
+                                d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                        </svg>
+                        クリップボードへコピーする
+                    </span>
+                </button>
+            </div>
+
+            <div>
+                <span class="english">Quiz preview (* spaced using tabs)</span>
+                <span class="japanese">プレビュー (* スペーシングはタブ)</span>
+            </div>
+            <div id="quiz-holder-frame">
+                <textarea id="quiz-holder" placeholder="Quiz will appear here..." spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="language-chooser">
+        <span class="english language-button">日本語に</span>
+        <span class="japanese language-button">to English</span>
+    </div>
+
+</body>
+<footer>
+    <p>Copyright by James Wood. Yeah, baby!</p>
+    <p>jamesarmstrongwood@gmail.com</p>
+    <p>(Thanks, Rosemary!)</p>
+</footer>
+
+</html>
